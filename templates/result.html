@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Prediction Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=12">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div class="bg"></div>
+
+  <div class="container">
+    <header class="header">
+      <div>
+        <h1 class="title">Prediction Result</h1>
+        <p class="subtitle">Best model (CV): <b>{{ selected_model }}</b></p>
+      </div>
+      <div class="actions">
+        <a class="btn secondary" href="/">Home</a>
+        <a class="btn" href="/predict">Try Again</a>
+      </div>
+    </header>
+
+    <!-- FINAL OUTPUT -->
+    <section class="card">
+      <h2 class="sectionTitle">Final Output</h2>
+
+      <p class="resultLine">
+        {% if final_pred == 1 %}
+          <span class="status bad">Heart Disease Detected</span>
+        {% else %}
+          <span class="status good">No Heart Disease</span>
+        {% endif %}
+      </p>
+
+      <p class="subtitle" style="margin-top:8px;">
+        Final probability (class 1): <b>{{ (final_proba * 100) | round(2) }}%</b>
+      </p>
+
+      <div class="noteRow" id="focusInfo" style="margin-top:8px;">
+        Tip: Click any bar or any table row to focus that model.
+      </div>
+
+      <div class="charts" style="margin-top:12px;">
+        <div class="card inner">
+          <h3 class="miniTitle">Focused model risk (interactive)</h3>
+          <div class="chartBox small">
+            <canvas id="finalChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card inner">
+          <h3 class="miniTitle">All models probability (click to focus)</h3>
+          <div class="chartBox">
+            <canvas id="modelsChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIPS (SITUATION-BASED) -->
+    <section class="card" style="margin-top:14px;">
+      <h2 class="sectionTitle">Personal Tips</h2>
+
+      {% set rp = (final_proba * 100) %}
+      <div class="tipsGrid">
+        <div class="tipCard">
+          <h3 class="miniTitle">Risk level</h3>
+          <p class="tipLine">
+            {% if rp < 30 %}
+              <span class="pill low">Low (0–30)</span>
+            {% elif rp < 60 %}
+              <span class="pill mid">Moderate (30–60)</span>
+            {% elif rp < 80 %}
+              <span class="pill high">High (60–80)</span>
+            {% else %}
+              <span class="pill vhigh">Very High (80–100)</span>
+            {% endif %}
+          </p>
+          <p class="subtitle" style="margin-top:8px;">
+            Use this as a screening hint only; confirm with a doctor.
+          </p>
+        </div>
+
+        <div class="tipCard">
+          <h3 class="miniTitle">What to do next</h3>
+
+          {% if final_pred == 1 %}
+            <ul class="tipsList">
+              <li>Schedule a doctor/cardiologist appointment soon and carry your BP/sugar/cholesterol reports.</li>
+              <li>If you have chest pain, shortness of breath, fainting, or sweating, treat it as urgent.</li>
+              <li>Avoid smoking/tobacco; reduce alcohol; cut fried/processed food and excess salt.</li>
+              <li>Do only doctor-approved exercise until a check-up if symptoms exist.</li>
+            </ul>
+          {% else %}
+            <ul class="tipsList">
+              <li>Maintain a heart-friendly diet: more fruits/vegetables; less fried/processed food.</li>
+              <li>Exercise regularly (walk + strength training) and keep a healthy weight.</li>
+              <li>Sleep 7–8 hours and manage stress (routine + breaks).</li>
+              <li>Do periodic BP, sugar, and lipid screening (especially with family history).</li>
+            </ul>
+          {% endif %}
+
+          {% if rp >= 80 %}
+            <div class="callout danger" style="margin-top:10px;">
+              Very high risk band: prioritize a medical check-up and do not self-medicate.
+            </div>
+          {% elif rp >= 60 %}
+            <div class="callout warn" style="margin-top:10px;">
+              High risk band: lifestyle changes + screening tests are strongly recommended.
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    <!-- MODEL TABLE (INTERACTIVE) -->
+    <section class="card" style="margin-top:14px;">
+      <div class="tableHeaderRow">
+        <h2 class="sectionTitle" style="margin:0;">Model Table (Interactive)</h2>
+        <div class="tableTools">
+          <input id="tableSearch" class="tableSearch" type="text" placeholder="Search model name..." />
+          <button class="btn secondary miniBtn" id="clearSearch" type="button">Clear</button>
+        </div>
+      </div>
+
+      <div class="noteRow" style="margin-top:10px;">
+        Click headers to sort. Click a row to focus that model.
+      </div>
+
+      <div class="tableWrap">
+        <table id="modelsTable">
+          <thead>
+            <tr>
+              <th class="sortable" data-type="text">Model <span class="sortIcon"></span></th>
+              <th class="sortable" data-type="text">Prediction <span class="sortIcon"></span></th>
+              <th class="sortable" data-type="num">Prob (class 1) <span class="sortIcon"></span></th>
+              <th class="sortable" data-type="num">CV ROC-AUC <span class="sortIcon"></span></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for model_name, r in all_results.items() %}
+              {% set p = (r.proba * 100) %}
+              <tr
+                data-model="{{ model_name }}"
+                data-proba="{{ p | round(6) }}"
+                data-cv="{% if r.cv_score is not none %}{{ r.cv_score }}{% else %}{% endif %}"
+                class="
+                  {% if p < 30 %}risk-low
+                  {% elif p < 60 %}risk-mid
+                  {% elif p < 80 %}risk-high
+                  {% else %}risk-vhigh
+                  {% endif %}
+                "
+              >
+                <td class="mono">{{ model_name }}</td>
+                <td>{% if r.pred == 1 %}Heart Disease{% else %}No Heart Disease{% endif %}</td>
+                <td>{{ (r.proba * 100) | round(2) }}%</td>
+                <td>
+                  {% if r.cv_score is not none %}
+                    {{ r.cv_score | round(4) }}
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Made by Shivam Kumar</p>
+    </footer>
+  </div>
+
+  <script>
+    const allResults = {{ all_results | tojson }};
+    const finalProba = {{ final_proba | tojson }};
+    const focusInfo = document.getElementById("focusInfo");
+
+    // ---------- helpers ----------
+    const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
+
+    function riskColor(pct){
+      if (pct < 30) return "rgba(22,163,74,0.85)";    // green
+      if (pct < 60) return "rgba(234,179,8,0.85)";    // yellow
+      if (pct < 80) return "rgba(249,115,22,0.85)";   // orange
+      return "rgba(220,38,38,0.85)";                  // red
+    }
+
+    // ---------- charts ----------
+    const names = Object.keys(allResults).sort((a, b) => allResults[b].proba - allResults[a].proba);
+    const probs = names.map(n => clamp(allResults[n].proba * 100, 0, 100));
+
+    const finalChart = new Chart(document.getElementById('finalChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Disease (1)', 'No disease (0)'],
+        datasets: [{
+          data: [finalProba * 100, (1 - finalProba) * 100],
+          backgroundColor: [riskColor(finalProba * 100), "rgba(15,23,42,0.10)"],
+          borderWidth: 0,
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '72%',
+        plugins: {
+          legend: { position: 'bottom' },
+          tooltip: {
+            callbacks: { label: (ctx) => `${ctx.label}: ${ctx.parsed.toFixed(2)}%` }
+          }
+        }
+      }
+    });
+
+    const modelsChart = new Chart(document.getElementById('modelsChart'), {
+      type: 'bar',
+      data: {
+        labels: names,
+        datasets: [{
+          label: 'Probability of class 1 (%)',
+          data: probs,
+          backgroundColor: probs.map(p => riskColor(p)),
+          borderColor: "rgba(15,23,42,0.08)",
+          borderWidth: 1,
+          borderRadius: 10,
+          barThickness: 34
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            min: 0, max: 100,
+            ticks: { callback: (v) => v + "%" },
+            grid: { color: "rgba(15,23,42,0.06)" }
+          },
+          x: { grid: { display: false } }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              title: (items) => `Model: ${items[0].label}`,
+              label: (ctx) => `Risk: ${ctx.parsed.y.toFixed(2)}% (click to focus)`
+            }
+          }
+        },
+        onClick: (evt) => {
+          const points = modelsChart.getElementsAtEventForMode(evt, "nearest", { intersect: true }, true);
+          if (!points.length) return;
+          const idx = points[0].index;
+          selectModel(names[idx]);
+        }
+      }
+    });
+
+    // ---------- interactive table (search + sort + row select) ----------
+    const table = document.getElementById("modelsTable");
+    const tbody = table.querySelector("tbody");
+    const headers = Array.from(table.querySelectorAll("th.sortable"));
+    const searchInput = document.getElementById("tableSearch");
+    const clearBtn = document.getElementById("clearSearch");
+
+    let sortState = { col: null, asc: true };
+
+    function parseCell(tr, colIdx, type){
+      const td = tr.children[colIdx];
+      const raw = (td.textContent || "").trim();
+
+      if (type === "num"){
+        if (raw.toUpperCase() === "N/A" || raw === "") return Number.NEGATIVE_INFINITY;
+        // handles "85.32%" or "0.9123"
+        const val = parseFloat(raw.replace("%",""));
+        return Number.isFinite(val) ? val : Number.NEGATIVE_INFINITY;
+      }
+      return raw.toLowerCase();
+    }
+
+    function setSortIcons(){
+      headers.forEach((h, i) => {
+        const icon = h.querySelector(".sortIcon");
+        if (!icon) return;
+        if (sortState.col !== i) icon.textContent = "";
+        else icon.textContent = sortState.asc ? "▲" : "▼";
+      });
+    }
+
+    headers.forEach((th, idx) => {
+      th.addEventListener("click", () => {
+        const type = th.dataset.type || "text";
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        if (sortState.col === idx) sortState.asc = !sortState.asc;
+        else { sortState.col = idx; sortState.asc = true; }
+
+        rows.sort((a, b) => {
+          const av = parseCell(a, idx, type);
+          const bv = parseCell(b, idx, type);
+          if (av < bv) return sortState.asc ? -1 : 1;
+          if (av > bv) return sortState.asc ? 1 : -1;
+          return 0;
+        });
+
+        rows.forEach(r => tbody.appendChild(r));
+        setSortIcons();
+      });
+    });
+
+    function applySearch(){
+      const q = searchInput.value.trim().toLowerCase();
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      rows.forEach(r => {
+        const model = (r.dataset.model || "").toLowerCase();
+        r.style.display = model.includes(q) ? "" : "none";
+      });
+    }
+
+    searchInput.addEventListener("input", applySearch);
+    clearBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      applySearch();
+      searchInput.focus();
+    });
+
+    function selectModel(modelName){
+      const row = tbody.querySelector(`tr[data-model="${CSS.escape(modelName)}"]`);
+      if (!row) return;
+
+      // highlight row
+      tbody.querySelectorAll("tr").forEach(r => r.classList.remove("rowSelected"));
+      row.classList.add("rowSelected");
+
+      // update doughnut to this model
+      const p = clamp(allResults[modelName].proba * 100, 0, 100);
+      finalChart.data.datasets[0].data = [p, 100 - p];
+      finalChart.data.datasets[0].backgroundColor = [riskColor(p), "rgba(15,23,42,0.10)"];
+      finalChart.update();
+
+      // small text
+      focusInfo.textContent = `Focused model: ${modelName} | Risk: ${p.toFixed(2)}%`;
+
+      // scroll into view (nice UX)
+      row.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    // row click => focus
+    tbody.querySelectorAll("tr").forEach(tr => {
+      tr.addEventListener("click", () => selectModel(tr.dataset.model));
+    });
+
+    // show default focus as selected_model (if exists), else first model
+    if (allResults["{{ selected_model }}"]) selectModel("{{ selected_model }}");
+    else if (names.length) selectModel(names[0]);
+
+    setSortIcons();
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enter Details</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=1">
+</head>
+<body>
+  <div class="bg"></div>
+
+  <div class="container">
+    <header class="header">
+      <div>
+        <h1 class="title">Enter Patient Details</h1>
+        <p class="subtitle">Fill all fields (dataset ranges shown).</p>
+      </div>
+      <div class="actions">
+        <a class="btn secondary" href="/">Home</a>
+      </div>
+    </header>
+
+    {% if error %}
+      <div class="alert">{{ error }}</div>
+    {% endif %}
+
+    <form class="card" method="POST" action="/predict">
+      <div class="grid">
+
+        <div class="field">
+          <label>Age</label>
+          <input type="number" name="Age" step="1"
+                 min="{{ ranges['Age'][0] }}" max="{{ ranges['Age'][1] }}" required>
+          <div class="hint">Range: {{ ranges['Age'][0] }} to {{ ranges['Age'][1] }}</div>
+        </div>
+
+        <div class="field">
+          <label>Sex</label>
+          <select name="Sex" required>
+            {% for v in allowed['Sex'] %}
+              <option value="{{ v }}">{{ v }}</option>
+            {% endfor %}
+          </select>
+          <div class="hint">Options: {{ allowed['Sex'] | join(', ') }}</div>
+        </div>
+
+        <div class="field">
+          <label>ChestPainType</label>
+          <select name="ChestPainType" required>
+            {% for v in allowed['ChestPainType'] %}
+              <option value="{{ v }}">{{ v }}</option>
+            {% endfor %}
+          </select>
+          <div class="hint">Options: {{ allowed['ChestPainType'] | join(', ') }}</div>
+        </div>
+
+        <div class="field">
+          <label>RestingBP</label>
+          <input type="number" name="RestingBP" step="1"
+                 min="{{ ranges['RestingBP'][0] }}" max="{{ ranges['RestingBP'][1] }}" required>
+          <div class="hint">Range: {{ ranges['RestingBP'][0] }} to {{ ranges['RestingBP'][1] }} (0 treated as missing)</div>
+        </div>
+
+        <div class="field">
+          <label>Cholesterol</label>
+          <input type="number" name="Cholesterol" step="1"
+                 min="{{ ranges['Cholesterol'][0] }}" max="{{ ranges['Cholesterol'][1] }}" required>
+          <div class="hint">Range: {{ ranges['Cholesterol'][0] }} to {{ ranges['Cholesterol'][1] }} (0 treated as missing)</div>
+        </div>
+
+        <div class="field">
+          <label>FastingBS</label>
+          <select name="FastingBS" required>
+            <option value="0">0</option>
+            <option value="1">1</option>
+          </select>
+          <div class="hint">Range: {{ ranges['FastingBS'][0] }} to {{ ranges['FastingBS'][1] }}</div>
+        </div>
+
+        <div class="field">
+          <label>RestingECG</label>
+          <select name="RestingECG" required>
+            {% for v in allowed['RestingECG'] %}
+              <option value="{{ v }}">{{ v }}</option>
+            {% endfor %}
+          </select>
+          <div class="hint">Options: {{ allowed['RestingECG'] | join(', ') }}</div>
+        </div>
+
+        <div class="field">
+          <label>MaxHR</label>
+          <input type="number" name="MaxHR" step="1"
+                 min="{{ ranges['MaxHR'][0] }}" max="{{ ranges['MaxHR'][1] }}" required>
+          <div class="hint">Range: {{ ranges['MaxHR'][0] }} to {{ ranges['MaxHR'][1] }}</div>
+        </div>
+
+        <div class="field">
+          <label>ExerciseAngina</label>
+          <select name="ExerciseAngina" required>
+            {% for v in allowed['ExerciseAngina'] %}
+              <option value="{{ v }}">{{ v }}</option>
+            {% endfor %}
+          </select>
+          <div class="hint">Options: {{ allowed['ExerciseAngina'] | join(', ') }}</div>
+        </div>
+
+        <div class="field">
+          <label>Oldpeak</label>
+          <input type="number" name="Oldpeak" step="0.1"
+                 min="{{ ranges['Oldpeak'][0] }}" max="{{ ranges['Oldpeak'][1] }}" required>
+          <div class="hint">Range: {{ ranges['Oldpeak'][0] }} to {{ ranges['Oldpeak'][1] }}</div>
+        </div>
+
+        <div class="field">
+          <label>ST_Slope</label>
+          <select name="ST_Slope" required>
+            {% for v in allowed['ST_Slope'] %}
+              <option value="{{ v }}">{{ v }}</option>
+            {% endfor %}
+          </select>
+          <div class="hint">Options: {{ allowed['ST_Slope'] | join(', ') }}</div>
+        </div>
+
+      </div>
+
+      <div class="actions">
+        <button class="btn" type="submit">Predict</button>
+        <a class="btn secondary" href="/">Cancel</a>
+      </div>
+    </form>
+
+    <p class="footer-note">Made by Shivam Kumar</p>
+  </div>
+</body>
+</html>

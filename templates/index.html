@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Heart Disease Prediction</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=16">
+</head>
+
+<body class="homeVideo">
+  <!-- Video background -->
+  <div class="videoBg">
+    <video autoplay muted loop playsinline preload="auto" id="bgVideo">
+      <source src="{{ url_for('static', filename='heartvideomp4.mp4') }}" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+    <div class="videoOverlay"></div>
+  </div>
+
+  <div class="container">
+    <header class="hero">
+      <h1 class="title">Heart Disease Prediction</h1>
+      <p class="subtitle">AI-powered risk assessment using clinical data</p>
+      <p class="builtLine"><strong>Built by Shivam Kumar</strong></p>
+
+      <div class="actions">
+        <a class="btn" href="/predict">Start Prediction</a>
+      </div>
+    </header>
+
+    <section class="card aboutCard glassCard" style="margin-top:24px;">
+      <h2 class="sectionTitle">About This Tool</h2>
+
+      <p class="aboutText">
+        This web app predicts the probability of heart disease using clinical inputs (screening support only).
+      </p>
+
+      <div class="modelsGrid">
+        <div class="modelChip">
+          <div class="modelName">Logistic Regression</div>
+          <div class="modelDesc">Fast baseline classifier that outputs probabilities.</div>
+        </div>
+
+        <div class="modelChip">
+          <div class="modelName">Random Forest</div>
+          <div class="modelDesc">Ensemble of many decision trees to improve robustness.</div>
+        </div>
+
+        <div class="modelChip">
+          <div class="modelName">SVM</div>
+          <div class="modelDesc">Finds a separating boundary; can work well in high dimensions.</div>
+        </div>
+
+        <div class="modelChip">
+          <div class="modelName">Gradient Boosting</div>
+          <div class="modelDesc">Sequential trees that correct earlier errors (boosting).</div>
+        </div>
+      </div>
+
+      <div class="alert" style="margin-top:14px;">
+        <strong>Medical Disclaimer:</strong> This is a screening tool only, not a medical diagnosis.
+        Always consult a qualified healthcare professional.
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Made by Shivam Kumar</p>
+    </footer>
+  </div>
+</body>
+</html>

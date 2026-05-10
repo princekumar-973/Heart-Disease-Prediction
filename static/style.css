@@ -1,0 +1,424 @@
+:root{
+  --bg:#F6F8FC;
+  --bg2:#EEF2F9;
+  --card:#FFFFFF;
+  --border:#E6EAF2;
+  --text:#0F172A;
+  --muted:#475569;
+  --primary:#2563EB;
+  --primary2:#1D4ED8;
+  --ok:#16A34A;
+  --bad:#DC2626;
+  --shadow: 0 12px 30px rgba(15, 23, 42, .10);
+
+  --warn:#F59E0B;
+  --orange:#F97316;
+}
+
+*{ box-sizing:border-box; }
+html, body{ height:100%; }
+
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  color: var(--text);
+  background: linear-gradient(180deg, var(--bg), var(--bg2));
+}
+
+.bg{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(900px 550px at 10% 10%, rgba(37,99,235,.12), transparent 55%),
+    radial-gradient(900px 550px at 90% 0%, rgba(99,102,241,.10), transparent 55%),
+    linear-gradient(180deg, var(--bg), var(--bg2));
+}
+
+.container{ max-width:1100px; margin:28px auto; padding:0 16px; }
+
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:14px;
+}
+
+.title{ margin:0; font-size:32px; font-weight:900; }
+.subtitle{ margin:6px 0 0; color:var(--muted); font-size:14px; }
+
+.badge{
+  padding:7px 12px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.65);
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:var(--shadow);
+}
+
+.actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+
+.btn{
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 800;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border: 1px solid rgba(0,0,0,.06);
+  cursor:pointer;
+  background: linear-gradient(135deg, var(--primary), var(--primary2));
+  color:#fff;
+}
+
+.btn.secondary{
+  background:#fff;
+  color:var(--text);
+  border:1px solid var(--border);
+}
+
+.alert{
+  background: rgba(220,38,38,.08);
+  border: 1px solid rgba(220,38,38,.22);
+  padding: 12px;
+  border-radius: 12px;
+  margin: 12px 0;
+}
+
+.grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; }
+@media (max-width: 900px){ .grid{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px){ .grid{ grid-template-columns: 1fr; } }
+
+.field label{ display:block; margin-bottom:6px; color:var(--muted); font-size:13px; font-weight:700; }
+.field input, .field select{
+  width:100%;
+  padding:10px 12px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:#fff;
+  color:var(--text);
+}
+.field input:focus, .field select:focus{
+  border-color: rgba(37,99,235,.55);
+  box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+  outline: none;
+}
+
+.hint{ margin-top:6px; font-size:12px; color:var(--muted); }
+
+.sectionTitle{ margin:0 0 10px; font-size:18px; font-weight:800; }
+.miniTitle{ margin:0 0 8px; font-size:14px; color:var(--muted); font-weight:800; }
+
+.status{ display:inline-flex; padding:8px 12px; border-radius:999px; font-weight:900; border:1px solid var(--border); }
+.status.good{ background: rgba(22,163,74,.10); border-color: rgba(22,163,74,.25); color: var(--ok); }
+.status.bad{ background: rgba(220,38,38,.10); border-color: rgba(220,38,38,.25); color: var(--bad); }
+
+.charts{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+@media (max-width: 900px){ .charts{ grid-template-columns: 1fr; } }
+
+.card.inner{ padding: 14px; }
+
+.chartBox{ width:100%; height:320px; position:relative; }
+.chartBox.small{ max-width:240px; height:180px; margin:0 auto; }
+
+.tableWrap{ overflow-x:auto; }
+table{ width:100%; border-collapse:collapse; border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-top:8px; }
+thead th{ text-align:left; font-size:13px; color:var(--muted); padding:10px; background:#F3F6FF; border-bottom:1px solid var(--border); white-space:nowrap; }
+tbody td{ padding:10px; border-bottom:1px solid var(--border); white-space:nowrap; }
+
+.footer{ margin-top:16px; text-align:center; color:var(--muted); font-size:13px; }
+.footer p{ margin:0; }
+
+/* ---------- Additions (tips + interactive table + bg colors) ---------- */
+.noteRow{
+  background: rgba(37,99,235,0.06);
+  border: 1px dashed rgba(37,99,235,0.25);
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.tipsGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 900px){ .tipsGrid{ grid-template-columns: 1fr; } }
+
+.tipCard{
+  border: 1px solid rgba(15,23,42,0.08);
+  background: rgba(255,255,255,0.75);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.tipsList{
+  margin: 8px 0 0 18px;
+  color: var(--text);
+}
+.tipsList li{ margin: 6px 0; }
+
+.pill{
+  display:inline-flex;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  border: 1px solid rgba(15,23,42,0.08);
+}
+.pill.low{ background: rgba(22,163,74,0.10); color: var(--ok); border-color: rgba(22,163,74,0.25); }
+.pill.mid{ background: rgba(245,158,11,0.14); color: #8A5200; border-color: rgba(245,158,11,0.30); }
+.pill.high{ background: rgba(249,115,22,0.14); color: #7A2E00; border-color: rgba(249,115,22,0.30); }
+.pill.vhigh{ background: rgba(220,38,38,0.10); color: var(--bad); border-color: rgba(220,38,38,0.25); }
+
+.callout{
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+.callout.warn{
+  background: rgba(245,158,11,0.16);
+  border: 1px solid rgba(245,158,11,0.28);
+  color: #7A4A00;
+}
+.callout.danger{
+  background: rgba(220,38,38,0.10);
+  border: 1px solid rgba(220,38,38,0.22);
+  color: var(--bad);
+}
+
+.tableHeaderRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.tableTools{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+  flex-wrap: wrap;
+}
+
+.tableSearch{
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  min-width: 240px;
+  outline: none;
+}
+.tableSearch:focus{
+  border-color: rgba(37,99,235,.55);
+  box-shadow: 0 0 0 4px rgba(37,99,235,.12);
+}
+
+.miniBtn{ padding: 10px 12px; }
+
+th.sortable{
+  cursor: pointer;
+  user-select: none;
+}
+th.sortable:hover{
+  background: #EAF0FF;
+}
+.sortIcon{
+  margin-left: 6px;
+  font-size: 11px;
+  color: rgba(71,85,105,0.9);
+}
+
+/* Zebra + hover */
+tbody tr:nth-child(odd){
+  background: rgba(15,23,42,0.015);
+}
+tbody tr:hover{
+  background: rgba(37,99,235,0.08);
+}
+
+/* Row selected highlight */
+tbody tr.rowSelected{
+  outline: 2px solid rgba(37,99,235,0.55);
+  outline-offset: -2px;
+  background: rgba(37,99,235,0.12) !important;
+}
+
+/* Risk band background colors (subtle) */
+tbody tr.risk-low{ background: rgba(22,163,74,0.05); }
+tbody tr.risk-mid{ background: rgba(245,158,11,0.06); }
+tbody tr.risk-high{ background: rgba(249,115,22,0.06); }
+tbody tr.risk-vhigh{ background: rgba(220,38,38,0.05); }
+
+.mono{
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-weight: 800;
+}
+/* ===== Home page: video-only background ===== */
+body.homeVideo{
+  background: transparent !important; /* remove gradient background on home */
+}
+
+/* if any .bg element exists elsewhere, hide it only on home */
+body.homeVideo .bg{
+  display: none !important;
+}
+
+/* Fullscreen video */
+body.homeVideo .videoBg{
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: -2;
+}
+
+body.homeVideo .videoBg video{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+
+  /* Increase visibility */
+  filter: brightness(1.15) contrast(1.15) saturate(1.2); /* tune if needed */ /* filters supported in CSS [web:646] */
+}
+
+/* Make overlay minimal (or set opacity to 0 to remove it completely) */
+body.homeVideo .videoOverlay{
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.18);  /* smaller value => video more visible */
+  z-index: 1;
+}
+
+/* Put content above video */
+body.homeVideo .container{
+  position: relative;
+  z-index: 10;
+}
+
+/* Improve text readability on top of video */
+body.homeVideo .hero{
+  text-align: center;
+  padding: 90px 0 40px;
+}
+
+body.homeVideo .title{
+  color: #ffffff;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.45);
+}
+
+body.homeVideo .subtitle{
+  color: rgba(255,255,255,0.88);
+  text-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+/* Make cards a little translucent on home so video shows through */
+body.homeVideo .card{
+  background: rgba(255,255,255,0.78);
+  backdrop-filter: blur(6px);
+}
+/* Home page about card: reduce opacity so video is more visible behind it */
+body.homeVideo .card.aboutCard{
+  background: rgba(255,255,255,0.60);
+  border: 1px solid rgba(255,255,255,0.35);
+  backdrop-filter: blur(6px);
+}
+
+body.homeVideo .aboutText{
+  margin: 0 0 12px 0;
+  color: rgba(255,255,255,0.92);
+  text-shadow: 0 8px 22px rgba(0,0,0,0.35);
+  line-height: 1.55;
+}
+
+/* 4 model chips */
+.modelsGrid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+@media (max-width: 700px){
+  .modelsGrid{ grid-template-columns: 1fr; }
+}
+
+.modelChip{
+  background: rgba(15,23,42,0.35);
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.modelName{
+  font-weight: 900;
+  color: rgba(255,255,255,0.95);
+  margin-bottom: 4px;
+}
+
+.modelDesc{
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.35;
+}
+
+
+
+
+/* Glassmorphism cards */
+.glassCard{
+  /* strong blur + slight saturation for vivid video behind */
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%); /* Safari */
+  background: rgba(255, 255, 255, 0.22);              /* low-opacity fill */
+  border: 1px solid rgba(255, 255, 255, 0.28);        /* soft border */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+body.homeVideo .card.aboutCard{
+  /* override older aboutCard style if present */
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+}
+
+/* Optional: glass buttons variant if you want the Start button to match */
+.btn.glass{
+  background: rgba(255,255,255,0.16);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.30);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+}
+
+/* Credit line under hero */
+.creditLine{
+  margin: 12px 0 0;
+  color: #ffffff;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.45);
+  letter-spacing: 0.2px;
+}
+
+/* Improve text legibility on glass */
+.glassCard .sectionTitle,
+.glassCard .aboutText,
+.glassCard .modelName,
+.glassCard .modelDesc{
+  color: rgba(255,255,255,0.96);
+  text-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
