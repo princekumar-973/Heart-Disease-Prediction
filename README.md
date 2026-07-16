@@ -35,7 +35,6 @@
 | Total Records | 918 clinical records |
 | Input Features | 11 health parameters |
 | Target Variable | `HeartDisease` (0 = No, 1 = Yes) |
-| Source | `heart.csv` |
 
 ### Input Features
 
@@ -92,13 +91,13 @@
 ## 📁 Project Structure
 
 ```
-heart-disease-prediction/
+Heart-Disease-Prediction/
 ├── app.py                  # Flask web server & routes
 ├── model.py                # ML training & artifact generation
 ├── heart.csv               # Dataset (918 records)
 ├── heart_artifact.pkl      # Trained models + metadata
 ├── requirements.txt        # Python dependencies
-├── Procfile                # Gunicorn config (Render/Heroku)
+├── Procfile                # Gunicorn config
 ├── vercel.json             # Vercel deployment config
 ├── static/
 │   ├── style.css           # Full CSS design system
@@ -111,46 +110,162 @@ heart-disease-prediction/
 
 ---
 
-## ▶️ Run Locally
+## 💻 Run Locally (Step-by-Step)
 
-### 1. Clone the repository
+### ✅ Prerequisites
+
+Make sure you have installed:
+- [Python 3.9+](https://www.python.org/downloads/)
+- [Git](https://git-scm.com/downloads)
+- pip (comes with Python)
+
+---
+
+### Step 1 — Copy / Clone the Project
+
+Copy (clone) the project from GitHub to your computer:
 
 ```bash
 git clone https://github.com/princekumar-973/Heart-Disease-Prediction.git
+```
+
+This will create a folder called **`Heart-Disease-Prediction`** on your computer.
+
+---
+
+### Step 2 — Change Directory (Go into the Project Folder)
+
+After cloning, navigate into the project folder:
+
+```bash
 cd Heart-Disease-Prediction
 ```
 
-### 2. Install dependencies
+> 💡 `cd` stands for **Change Directory** — it moves you into the project folder so you can run commands inside it.
+
+You can verify you're in the right folder:
+
+```bash
+# On Windows
+dir
+
+# On Mac/Linux
+ls
+```
+
+You should see files like `app.py`, `requirements.txt`, `heart.csv`, etc.
+
+---
+
+### Step 3 — Install Dependencies
+
+Install all required Python packages:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Start the Flask server
+> This reads the `requirements.txt` file and installs Flask, scikit-learn, pandas, numpy, and all other needed libraries.
+
+---
+
+### Step 4 — Run the App
+
+Start the Flask development server:
 
 ```bash
 python app.py
 ```
 
-### 4. Open in browser
+You will see output like:
+
+```
+ * Running on http://127.0.0.1:5000
+ * Debug mode: on
+```
+
+---
+
+### Step 5 — Open in Browser
+
+Open your browser and go to:
 
 ```
 http://127.0.0.1:5000
+```
+
+The app is now running locally on your machine! 🎉
+
+---
+
+### Step 6 — Stop the Server
+
+Press **`Ctrl + C`** in the terminal to stop the server.
+
+---
+
+## 🔁 Full Command Summary
+
+```bash
+# 1. Clone the project
+git clone https://github.com/princekumar-973/Heart-Disease-Prediction.git
+
+# 2. Go into the project folder
+cd Heart-Disease-Prediction
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Run the app
+python app.py
+
+# 5. Open browser at:
+#    http://127.0.0.1:5000
 ```
 
 ---
 
 ## 🌐 Deploy on Vercel
 
+### Option A — Via Vercel Website (Recommended)
+
+1. Go to **[vercel.com](https://vercel.com)** and sign in with GitHub
+2. Click **"New Project"**
+3. Import `princekumar-973/Heart-Disease-Prediction`
+4. Click **"Deploy"** ✅
+
+### Option B — Via Vercel CLI
+
 ```bash
 # Install Vercel CLI
 npm install -g vercel
+
+# Login to Vercel
+vercel login
 
 # Deploy
 vercel
 ```
 
-Or connect your GitHub repo directly at [vercel.com](https://vercel.com).
+---
+
+## 📤 Push Changes to GitHub
+
+After making changes to the project, upload them to GitHub:
+
+```bash
+# Check what files changed
+git status
+
+# Stage all changes
+git add .
+
+# Save changes with a message
+git commit -m "describe your changes here"
+
+# Upload to GitHub
+git push
+```
 
 ---
 
